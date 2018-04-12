@@ -6,6 +6,7 @@ const {upperFirst, camelCase, invert} = _
 const valueSml = Symbol('zEnumItemValue')
 
 module.exports = words => {
+  // todo add ...words support
   const zEnumItem = class {
     constructor (value) {
       this[valueSml] = value
@@ -22,6 +23,7 @@ module.exports = words => {
 
   const z = {
     addDict(name, dict) {
+      // todo add validation against words
       name = upperFirst(name)
       const invertDict = invert(dict)
 
@@ -37,6 +39,7 @@ module.exports = words => {
           .mapKeys((v, key) => camelCase(['is', key]))
           .mapValues(() => ({value: false, enumerable: true}))
           .value()
+        // todo add isOneOf
       })
     }
   }
