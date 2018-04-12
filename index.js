@@ -15,6 +15,7 @@ module.exports = words => {
         camelCase(['is', value]),
         {value: true, enumerable: true}
       )
+      Object.freeze(this)
     }
     toString () {
       return this[valueSml]

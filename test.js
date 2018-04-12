@@ -53,3 +53,13 @@ describe('is', () => {
     should.not.exist(a.isX)
   })
 })
+
+describe('instance', () => {
+  it('should be frozen', () => {
+    const eNum = zEnum(['a', 'b', 'c'])
+    const dictXyz = {a: 'x', b: 'y', c: 'z'}
+    eNum.addDict('xyz', dictXyz)
+    const a = eNum.fromXyz('x')
+    ;(() => a.newProp = true).should.throw
+  })
+})
