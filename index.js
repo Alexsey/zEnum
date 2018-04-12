@@ -1,6 +1,7 @@
 'use strict'
 
-const {upperFirst, findKey, invert} = require('lodash')
+const _ = require('lodash')
+const {upperFirst, camelCase, invert} = _
 
 const valueSml = Symbol('zEnumItemValue')
 
@@ -8,6 +9,11 @@ module.exports = words => {
   const zEnumItem = class {
     constructor (value) {
       this[valueSml] = value
+      Object.defineProperty(
+        this,
+        camelCase(['is', value]),
+        {value: true, enumerable: true}
+      )
     }
     toString () {
       return this[valueSml]
@@ -20,11 +26,17 @@ module.exports = words => {
       const invertDict = invert(dict)
 
       z[`from${name}`] = value => new zEnumItem(invertDict[value])
-      Object.defineProperty(zEnumItem.prototype, `to${name}`, {
-        getter () {
-          return dict[this[valueSml]]
+      Object.defineProperties(zEnumItem.prototype, {
+        [`to${name}`]: {
+          get () {
+            return dict[this[valueSml]]
+          },
+          enumerable: true
         },
-        enumerable: true
+        ..._(dict)
+          .mapKeys((v, key) => camelCase(['is', key]))
+          .mapValues(() => ({value: false, enumerable: true}))
+          .value()
       })
     }
   }
